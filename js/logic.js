@@ -22,14 +22,20 @@ function handleDragOver(e) { // drag over what area that is the rectangular area
 
 function handleDrop(e) { // Actually Appending the div on drop!
     e.preventDefault(); // prevent default behaviour
+
     var data = e.dataTransfer.getData("text");
+    let boxNo = data.replace(/^box-/, '');
+
     let dropBox = document.querySelector('.drop__boxes__container'); // dropping area
     
+    //to prevent re-dropping of the same box on the same place
+    if(document.getElementById(data).parentNode === dropBox)
+        return;
+
     dropBox.appendChild(document.getElementById(data)); // appendding dropped item.
     var element = document.getElementById(data);
     // element.removeEventListener('dragstart', handleDragStart); // remove drag event listner so that it cannot be re-dropped on the same area
     // element.draggable = false; // to prevent re-dropping
-    let boxNo = data.replace(/^box-/, '');
 
     var emptyBox = document.querySelector("#empty-box-"+ boxNo); // replace the empty space with the same empty div with different opacity
     emptyBox.classList.add("empty__box");
