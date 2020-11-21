@@ -27,19 +27,47 @@ function handleDrop(e) { // Actually Appending the div on drop!
     
     dropBox.appendChild(document.getElementById(data)); // appendding dropped item.
     var element = document.getElementById(data);
-    element.removeEventListener('dragstart', handleDragStart); // remove drag event listner so that it cannot be re-dropped on the same area
-    element.draggable = false; // to prevent re-dropping
+    // element.removeEventListener('dragstart', handleDragStart); // remove drag event listner so that it cannot be re-dropped on the same area
+    // element.draggable = false; // to prevent re-dropping
+    let boxNo = data.replace(/^box-/, '');
 
+    var emptyBox = document.querySelector("#empty-box-"+ boxNo); // replace the empty space with the same empty div with different opacity
+    emptyBox.classList.add("empty__box");
+    emptyBox.setAttribute("id","empty-box-"+boxNo);
+    emptyBox.addEventListener('drop', handleEmptyDrop, false);
+    emptyBox.addEventListener('dragover', handleDragOver, false);
+
+    printLog(boxNo,1);
+}
+
+function handleEmptyDrop(e) {
+    e.preventDefault(); // prevent default behaviour
+    var data = e.dataTransfer.getData("text");
+    let boxNo = data.replace(/^box-/, '');
+    let emptyBox = document.querySelector('#empty-box-' + boxNo); // dropping area
+    
+    emptyBox.appendChild(document.getElementById(data)); // appendding dropped item.
+    var element = document.getElementById(data);
+    // element.removeEventListener('dragstart', handleDragStart); // remove drag event listner so that it cannot be re-dropped on the same area
+    // element.draggable = false; // to prevent re-dropping
+
+    emptyBox.classList.remove("empty__box");
+    printLog(boxNo,2);
+}
+
+// function for printing logs
+function printLog(boxNo, operationNo) {
     var logDiv = document.querySelector(".action__log"); // selecting action log to print what box was dropped!
     var pNode = document.createElement("h1");
-    var node = document.createTextNode("Box " + data.replace(/^box-/, '') +" has been inserted");
-    
+    if(operationNo === 1) {
+        var node = document.createTextNode("Box " + boxNo +" has been inserted");
+    }
+    else {
+        var node = document.createTextNode("Box " + boxNo +" has been placed Back");
+    }
+
     pNode.appendChild(node);
     logDiv.appendChild(pNode);
-    console.log(data);
-
-    var emptyBox = document.querySelector("#empty-box-"+ data.replace(/^box-/, '')); // replace the empty space with the same empty div with different opacity
-    emptyBox.classList.add("empty__box");
 }
 
 // Adding Event Listners to the Elements
